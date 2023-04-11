@@ -3,39 +3,28 @@ package com.parkging.blog.apiapp.global.auth;
 import com.parkging.blog.apiapp.domain.member.domain.Member;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map;
 
-public class PrincipalDetails implements UserDetails, OAuth2User {
+public class PrincipalDetails implements UserDetails {
 
     private Member member;
-    private Map<String, Object> attributes;
 
-    public  PrincipalDetails(Member member) {
+    public PrincipalDetails(Member member) {
         this.member = member;
     }
 
-    public  PrincipalDetails(Member member, Map<String, Object> attributes) {
-        this.member = member;
-        this.attributes = attributes;
-    }
-
-    /**
-     * 해당 Member의 권한을 Return
-     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> collect = new ArrayList<>();
-        collect.add(new GrantedAuthority() {
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new GrantedAuthority() {
             @Override
             public String getAuthority() {
                 return member.getMemberRole().toString();
             }
         });
-        return collect;
+        return authorities;
     }
 
     @Override
@@ -45,7 +34,11 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
 
     @Override
     public String getUsername() {
-        return member.getName();
+        return member.getEmail();
+    }
+
+    public Long getId() {
+        return this.member.getId();
     }
 
     @Override
@@ -66,15 +59,5 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    @Override
-    public Map<String, Object> getAttributes() {
-        return attributes;
-    }
-
-    @Override
-    public String getName() {
-        return null;
     }
 }

@@ -1,9 +1,14 @@
 package com.parkging.blog.apiapp.global.exception;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Locale;
 
 @Component
@@ -65,6 +70,19 @@ public class ErrorMessageUtil {
                 .errorCode(errorCode)
                 .message(getErrorMessage(errorCode, args))
                 .build();
+    }
+
+    public void setErrorResponse(HttpServletResponse response, ErrorResult errorResult){
+        ObjectMapper objectMapper = new ObjectMapper();
+        response.setStatus(HttpStatus.BAD_REQUEST.value());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=UTF-8");
+        try{
+            response.getWriter().write(objectMapper.writeValueAsString(errorResult));
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
 

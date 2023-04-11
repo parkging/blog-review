@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +32,16 @@ public class MemberService {
                 .memberRole(MemberRole.ROLE_USER)
                 .build()
             ).getId();
+    }
+
+    @Transactional
+    public Long update(Long id, String name, String password, MemberRole memberRole) {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new NoResultException("error.member.notexgist"));
+
+        member.update(name, password, memberRole);
+
+        return member.getId();
     }
 
     public Member login(String email, String password) {

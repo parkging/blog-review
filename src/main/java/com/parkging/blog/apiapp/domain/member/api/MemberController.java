@@ -8,6 +8,7 @@ import com.parkging.blog.apiapp.domain.member.dto.MemberDto;
 import com.parkging.blog.apiapp.domain.member.dto.SginUpDto;
 import com.parkging.blog.apiapp.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,7 @@ public class MemberController {
                                 MemberRole.ROLE_USER);
     }
 
+    @Secured({MemberRole.ROLES.USER})
     @GetMapping("members/{memberId}")
     public MemberDto getMember(@PathVariable Long memberId) {
         Member member = memberService.findById(memberId);
@@ -38,21 +40,24 @@ public class MemberController {
                 .build();
     }
 
-    @PostMapping("certification")
-    public LoginResult login(@RequestBody @Validated LoginDto loginDto) {
-        Member member = memberService.login(loginDto.getEmail(), loginDto.getPassword());
-        /* todo api 통신에서 세션을 사용할 수 없으므로 토큰방식으로 인증로직 추가 필요 Start */
-//        //세션이 있으면 있는 세션 반환, 없으면 신규 세션을 생성
-//        HttpSession session = request.getSession();
-//        //세션에 로그인 회원 정보 보관
-//        session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
-        /* todo api 통신에서 세션을 사용할 수 없으므로 토큰방식으로 인증로직 추가 필요 End */
 
-        return LoginResult.builder()
-                .id(member.getId())
-                .name(member.getName())
-                .email(member.getEmail())
-                .build();
+    /**
+     * /certification => /login 으로 변경; 더이상 사용한함!
+     * Post /login 호출 시 Spring Security Filter(JwtAuthenticationFilter) 에서 인증 처리로 변경
+     */
+//    @PostMapping("certification")
+    public String login(@RequestBody @Validated LoginDto loginDto) {
+
+        return "";
+    }
+
+    @Secured({MemberRole.ROLES.USER})
+    @PatchMapping("members/{memberId}")
+    public Long updateById(@PathVariable(required = true) Long memberId, @RequestBody MemberDto memberDto) {
+        return memberService.update(memberId,
+                            memberDto.getName(),
+                            bCryptPasswordEncoder.encode(memberDto.getPassword()),
+                            MemberRole.ROLE_USER);
     }
 
     @DeleteMapping("certification")

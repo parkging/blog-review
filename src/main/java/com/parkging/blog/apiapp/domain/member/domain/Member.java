@@ -37,4 +37,10 @@ public class Member {
         this.password = password;
         this.memberRole = memberRole;
     }
+
+    public void update(String name, String password, MemberRole memberRole) {
+        if(name != null) this.name = name;
+        if(password != null) this.password = password;
+        if(memberRole != null) this.memberRole = memberRole;
+    }
 }
