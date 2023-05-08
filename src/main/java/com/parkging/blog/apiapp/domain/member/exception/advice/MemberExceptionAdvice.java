@@ -1,6 +1,6 @@
 package com.parkging.blog.apiapp.domain.member.exception.advice;
 
-import com.parkging.blog.apiapp.domain.member.exception.LoginFailException;
+import com.parkging.blog.apiapp.domain.member.exception.UnavailableSignUpException;
 import com.parkging.blog.apiapp.global.exception.ErrorMessageUtil;
 import com.parkging.blog.apiapp.global.exception.ErrorResult;
 import lombok.RequiredArgsConstructor;
@@ -43,11 +43,18 @@ public class MemberExceptionAdvice {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
-    public ErrorResult loginFailException(LoginFailException e) {
-        log.error("[MemberExceptionAdvice.noResultException]", e);
-        String redirectUrl = "login/login-form";
-        //todo 화면에서 redirect 주소 정의 후 수정 해야함
-        return eu.getErrorResult(e, redirectUrl);
+    public ErrorResult unavailableSignUpException(UnavailableSignUpException e) {
+        log.error("[MemberExceptionAdvice.UnavailableSignUpException]", e);
+        return eu.getErrorResult(e);
     }
+
+//    //미사용; ExceptionHandlerFilter 에서 처리
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    @ExceptionHandler
+//    public ErrorResult loginFailException(LoginFailException e) {
+//        log.error("[MemberExceptionAdvice.noResultException]", e);
+//        String redirectUrl = "login/login-form";
+//        return eu.getErrorResult(e, redirectUrl);
+//    }
 
 }

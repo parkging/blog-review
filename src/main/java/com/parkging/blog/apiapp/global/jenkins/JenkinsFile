@@ -1,0 +1,83 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Prepared Source') {
+
+            steps {
+                git branch: 'dev', credentialsId: 'parkging', url: 'https://github.com/parkging/hello-blog'
+            }
+        }
+
+        stage('Prepared Properties') {
+            steps {
+                dir('src/main/resources') {
+                    git branch: 'master', credentialsId: 'parkging', url: 'https://github.com/parkging/blog-properties'
+                }
+            }
+        }
+
+        stage('build') {
+            steps {
+                sh '''
+                chmod +x ./gradlew
+                ./gradlew clean bootJar
+                mv ./build/libs/blog-backend.jar ./blog-backend.jar
+                '''
+            }
+        }
+
+        stage('deploy') {
+            steps {
+                sshPublisher(
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: 'host',
+                            transfers: [
+
+                                sshTransfer(
+                                    cleanRemote: false,
+                                    excludes: '',
+                                    execCommand: '''
+                                                rm -f blog-backend.backup.jar || true
+                                                mv -f blog-backend.jar blog-backend.backup.jar || true
+                                                ''',
+                                    execTimeout: 120000,
+                                    flatten: false,
+                                    makeEmptyDirs: false,
+                                    noDefaultExcludes: false,
+                                    patternSeparator: '[, ]+',
+                                    remoteDirectory: 'blog/backend/build/',
+                                    remoteDirectorySDF: false,
+                                    removePrefix: '',
+                                    sourceFiles: ''
+                                ),
+                                sshTransfer(
+                                    cleanRemote: false,
+                                    excludes: '',
+                                    execCommand: '''
+                                                cd blog/backend/ && docker-compose down && docker-compose up -d
+                                                ''',
+                                    execTimeout: 120000,
+                                    flatten: false,
+                                    makeEmptyDirs: false,
+                                    noDefaultExcludes: false,
+                                    patternSeparator: '[, ]+',
+                                    remoteDirectory: 'blog/backend/build/',
+                                    remoteDirectorySDF: false,
+                                    removePrefix: '',
+                                    sourceFiles: 'blog-backend.jar'
+                                )
+                            ],
+                            usePromotionTimestamp: true,
+                            useWorkspaceInPromotion: true,
+                            verbose: true
+                        )
+                    ]
+                )
+            }
+        }
+
+    }
+
+}

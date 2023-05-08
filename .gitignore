@@ -35,3 +35,15 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Spring Properties ###
+src/**/application-security-local.properties
+src/**/application-security-wsl.properties
+src/**/application-security-dev.properties
+src/**/application-security-prod.properties
+src/**/database-local.properties
+src/**/database-wsl.properties
+src/**/database-dev.properties
+src/**/database-prod.properties
+
+

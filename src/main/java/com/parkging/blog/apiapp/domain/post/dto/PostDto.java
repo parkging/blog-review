@@ -18,6 +18,7 @@ public class PostDto {
     @NotNull
     private Long postCategoryId;
     private String preview;
+
     @NotNull
     private Long memberId;
 

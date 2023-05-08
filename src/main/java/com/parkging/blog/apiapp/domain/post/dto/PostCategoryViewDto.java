@@ -6,4 +6,5 @@ public interface PostCategoryViewDto {
     Long getId();
     String getName();
     PostCategory getParent();
+    Long getPostCount();
 }

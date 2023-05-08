@@ -9,9 +9,12 @@ public interface PostViewDto {
     Long getId();
     String getTitle();
     String getContent();
-    PostCategory getPostCategory();
+    String getPostCategoryName();
+    String getPostCategoryId();
     String getPreview();
     String getMemberName();
+    String getMemberId();
+    String getThumbnailImageUrl();
     LocalDateTime getCreateDate();
     LocalDateTime getModifiedDate();
 }

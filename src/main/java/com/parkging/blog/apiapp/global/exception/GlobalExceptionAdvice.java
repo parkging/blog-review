@@ -48,6 +48,13 @@ public class GlobalExceptionAdvice {
         return eu.getErrorResult(e);
     }
 
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler
+    public ErrorResult accessDeniedException(org.springframework.security.access.AccessDeniedException e) {
+        log.error("[GlobalExceptionAdvice.AccessDeniedException]", e);
+        return eu.getErrorResult("error.forbidden", null, null);
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
     public ErrorResult bindException(BindException e) {

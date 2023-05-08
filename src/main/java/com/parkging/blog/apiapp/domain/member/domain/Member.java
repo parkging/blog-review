@@ -27,10 +27,20 @@ public class Member {
     @NotNull
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private MemberRole memberRole;
+
     @Builder
-    public Member(String name, String email, String password) {
+    public Member(String name, String email, String password, MemberRole memberRole) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.memberRole = memberRole;
+    }
+
+    public void update(String name, String password, MemberRole memberRole) {
+        if(name != null) this.name = name;
+        if(password != null) this.password = password;
+        if(memberRole != null) this.memberRole = memberRole;
     }
 }

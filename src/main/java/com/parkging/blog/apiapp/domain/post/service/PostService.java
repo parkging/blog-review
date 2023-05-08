@@ -77,6 +77,14 @@ public class PostService {
                 .orElseThrow(() -> new NoSuchElementException("error.post.notexgist"));
     }
 
+    public Long countAll() {
+        return postRepository.count();
+    }
+
+    public Long countByPostCategoryName(String postCategoryName) {
+        return postRepository.countByPostCategoryName(postCategoryName);
+    }
+
     /**********************************비지니스 로직 분리**********************************/
 
     private String getPreview(String content) {

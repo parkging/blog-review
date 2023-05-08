@@ -6,7 +6,7 @@
 * Spring Boot 2.7.8
 * Gradle 7.6
 * IntelliJ IDEA
-* Java 11
+* Java 17
 * JUnit 4
 * GitHub(https://github.com/parkging/hello-blog)
  

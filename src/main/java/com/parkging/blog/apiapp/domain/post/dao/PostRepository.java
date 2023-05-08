@@ -10,10 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
-    //todo fetch join으로 수정
     List<PostViewDto> findPostAndMemberByPostCategory(PostCategory postCategory, Pageable pageable);
-    //todo fetch join으로 수정
     List<PostViewDto> findPostAndMemberBy(Pageable pageable);
     Optional<PostViewDto> findViewById(Long postId);
+    Long countByPostCategoryName(String postCategoryName);
 
 }

@@ -6,7 +6,7 @@ plugins {
 
 group = 'com.parkging'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '17'
 
 configurations {
 	compileOnly {
@@ -23,7 +23,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'io.monix:monix-mdc-logback_2.13:0.1.8'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'junit:junit:4.13.1'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	compileOnly 'org.projectlombok:lombok'
@@ -32,8 +33,29 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// Spring Security 추가
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	// jwt 라이브러리 추가
+//	implementation "io.jsonwebtoken:jjwt:0.9.1"
+	implementation 'com.auth0:java-jwt:3.19.2'
+	// Oauth 라이브러리 추가
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	//p6spy JPA 로그 라이브러리 추가
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.6'
+//	// https://mvnrepository.com/artifact/org.postgresql/postgresql
+//	implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.23' // 추가
+	//mysql
+	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.32'
+
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+bootJar{
+	archivesBaseName = 'blog-backend'
+	archiveFileName = 'blog-backend.jar'
+	archiveVersion = "0.0.1"
 }

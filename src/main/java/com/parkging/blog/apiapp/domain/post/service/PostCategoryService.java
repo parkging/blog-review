@@ -1,8 +1,11 @@
 package com.parkging.blog.apiapp.domain.post.service;
 
 import com.parkging.blog.apiapp.domain.post.dao.PostCategoryRepository;
+import com.parkging.blog.apiapp.domain.post.dao.PostRepository;
 import com.parkging.blog.apiapp.domain.post.domain.PostCategory;
 import com.parkging.blog.apiapp.domain.post.dto.PostCategoryViewDto;
+import com.parkging.blog.apiapp.domain.post.exception.ChildCategoryExistException;
+import com.parkging.blog.apiapp.domain.post.exception.PostExistException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PostCategoryService {
     private final PostCategoryRepository postCategoryRepository;
+    private final PostRepository postRepository;
 
     @Transactional
     public Long save(String name, Long parentPostCategoryId) {
@@ -43,7 +47,18 @@ public class PostCategoryService {
     public Long deleteById(Long postCategoryId) {
         PostCategory postCategory = postCategoryRepository.findById(postCategoryId)
                 .orElseThrow(() -> new NoSuchElementException("error.postcategory.notexgist"));
-        postCategoryRepository.delete(postCategory);
+
+        Long postCount = postRepository.countByPostCategoryName(postCategory.getName());
+        if(postCount > 0) {
+            throw new PostExistException("error.postcategory.postexist");
+        }
+
+        PostCategory parent = postCategoryRepository.findByParent(postCategory).orElse(null);
+        if(parent != null) {
+            throw new ChildCategoryExistException("error.postcategory.childexist");
+        }
+
+        postCategoryRepository.deleteById(postCategory.getId());
         return postCategory.getId();
     }
 
